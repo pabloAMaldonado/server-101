@@ -1,20 +1,20 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
-const { Schema } = mongoose;
+const { Schema } = mongoose
 
 const passwordValidator = (value) => {
   // Check for at least one uppercase letter
   if (!/[A-Z]/.test(value)) {
-    throw new Error('Password must contain at least one uppercase letter');
+    throw new Error('Password must contain at least one uppercase letter')
   }
 
   // Check for at least one symbol (non-alphanumeric character)
   if (!/[^A-Za-z0-9]/.test(value)) {
-    throw new Error('Password must contain at least one symbol');
+    throw new Error('Password must contain at least one symbol')
   }
 
-  return true;
-};
+  return true
+}
 
 const UserSchema = new Schema({
   email: {
@@ -36,6 +36,6 @@ const UserSchema = new Schema({
     type: String,
     default: 'free'
   }
-});
+})
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model('User', UserSchema)
