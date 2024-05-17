@@ -11,6 +11,7 @@ const BudgetSchema = new Schema({
       item: { type: String, required: true }
     }],
     id: { type: Number, required: true },
+    receit: { type: String, required: true },
     type: { type: String, required: true }
   }]
 })
