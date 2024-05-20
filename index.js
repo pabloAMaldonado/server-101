@@ -16,7 +16,7 @@ mongoose.set('strictQuery', false)
 
 const PORT = process.env.PORT || 3000
 const DB = process.env.DB
-
+console.log(DB)
 const { swaggerDocs } = require('./src/configuration/swaggerConfig')
 
 async function connectToDatabase (db) {

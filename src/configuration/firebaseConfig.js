@@ -1,11 +1,15 @@
-const admin = require('firebase-admin')
-const serviceAccount = require()// to set up
+const dotenv = require('dotenv')
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  storageBucket: ''// to add up
-})
+dotenv.config()
 
-const bucket = admin.storage().bucket()
+const FirebaseConfig = {
+  apiKey: process.env.API_KEY_FIREBASE,
+  authDomain: process.env.AUTH_DOMAIN,
+  projectId: process.env.PROJECT_ID,
+  storageBucket: process.env.STORAGE_BUCKET,
+  messagingSenderId: process.env.MESSAGINGI_SENDER_ID,
+  appId: process.env.APP_ID_FIREBASE,
+  measurementId: process.env.MEASUREMENT_ID
+}
 
-module.exports = bucket
+module.exports = FirebaseConfig
