@@ -4,7 +4,8 @@ const dotenv = require('dotenv')
 
 dotenv.config()
 
-const { webUrl } = process.env
+const PORT = process.env.PORT || 3000
+const webUrl = process.env.webUrl || `http://localhost:${PORT}`
 
 const options = {
   definition: {

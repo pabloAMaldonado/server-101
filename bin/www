@@ -1,0 +1,9 @@
+const { app } = require('../index') // Importa la variable app de tu archivo app.js
+
+const port = process.env.PORT || 3000 // Puerto que deseas utilizar
+
+app.set('port', port)
+
+const server = app.listen(port, () => {
+  console.log(`Servidor corriendo en el puerto ${port}`)
+})

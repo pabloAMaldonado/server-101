@@ -1,13 +1,17 @@
-const Index = require('../models/indexModel')
 const asyncHandler = require('express-async-handler')
+const User = require('../models/userModel')
 
-exports.getIndex = asyncHandler(async (req, res, next) => {
-  const index = await Index.find()
+exports.homepage = asyncHandler(async (req, res, next) => {
+  const [userTotal, userList, usersPending] = await Promise.all([
+    User.countDocuments({ verified: 'True' }).exec(),
+    User.find({ verified: 'True' }).exec(),
+    User.countDocuments({ verified: 'Pending' }).exec()
+  ])
 
-  if (index === null) {
-    const err = new Error('no Index found')
-    err.status = 404
-    return next(err)
-  }
-  return res.status(200).send({ message: 'Informacion entregada correctamente', index })
+  res.render('index', {
+    title: 'Server EcoProyectos NoSQL',
+    user_count: userTotal,
+    user_list: userList,
+    user_pending: usersPending
+  })
 })

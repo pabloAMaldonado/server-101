@@ -35,6 +35,13 @@ const UserSchema = new Schema({
   status: {
     type: String,
     default: 'free'
+  },
+  verified: {
+    type: String,
+    default: 'Pending'
+  },
+  verifiedId: {
+    type: String
   }
 })
 

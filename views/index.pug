@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  h1= title
+  
+  p Users information:
+
+  ul
+    li #[strong Users:] !{user_list}
+    li #[strong User count:] !{user_count}
+    li #[strong Users Pending:] !{user_pending}

@@ -12,7 +12,7 @@ exports.new_User = asyncHandler(async (req, res, next) => {
 
   const user = await User.findOne({ email })
 
-  if (user) return res.status(400).send({ message: 'Error, Ya existe un usuario con ese correo electronico' })
+  if (user) return res.status(400).json({ error: 'User email already used' })
 
   try {
     const newUser = new User({
@@ -23,9 +23,9 @@ exports.new_User = asyncHandler(async (req, res, next) => {
 
     await newUser.save()
 
-    console.log('Usuario creado con exito')
+    res.status(200).json({ message: 'User created successfully' })
     next()
   } catch (error) {
-    return res.status(400).send('Error creating new user')
+    return res.status(500).json({ error: 'Internal server error' })
   }
 })

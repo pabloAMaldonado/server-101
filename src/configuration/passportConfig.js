@@ -6,7 +6,7 @@ const { ExtractJwt } = require('passport-jwt')
 const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv')
 
-const User = require('../model/userModel')
+const User = require('../models/userModel')
 
 dotenv.config()
 
@@ -50,13 +50,15 @@ passport.deserializeUser((id, done) => {
   })
 })
 
+const JWT_SECRET = process.env.JWT_SECRET
+
 passport.use(new JwtStrategy({
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: jwtTokenSecret
+  secretOrKey: JWT_SECRET
 }, (jwtPayload, done) => done(null, jwtPayload)))
 
 function generateToken (prop) {
-  return jwt.sign({ prop }, jwtTokenSecret, { expiresIn: '1h' })
+  return jwt.sign({ prop }, JWT_SECRET, { expiresIn: '1h' })
 }
 
 function authenticateToken (req, res, next) {
@@ -66,7 +68,7 @@ function authenticateToken (req, res, next) {
     return res.status(401).json({ message: 'Token no proporcionado' })
   }
 
-  jwt.verify(token, jwtTokenSecret, (err, user) => {
+  jwt.verify(token, JWT_SECRET, (err, user) => {
     if (err) {
       return res.status(403).json({ message: 'Token no valido' })
     }

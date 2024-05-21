@@ -8,16 +8,12 @@ const cors = require('cors')
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
 
-const app = express()
-
 dotenv.config()
 
-mongoose.set('strictQuery', false)
+const app = express()
 
-const PORT = process.env.PORT || 3000
+mongoose.set('strictQuery', false)
 const DB = process.env.DB
-console.log(DB)
-const { swaggerDocs } = require('./src/configuration/swaggerConfig')
 
 async function connectToDatabase (db) {
   try {
@@ -39,11 +35,13 @@ app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'pug')
 
 app.use(session({
-  secret: 'mysecret',
+  secret: process.env.SESSION_SECRET || 'mysecret',
   cookie: { maxAge: 3600000 },
   saveUninitialized: false,
   resave: false
 }))
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 app.use(cors())
 app.use(morgan('dev'))
 app.use(passport.initialize())
@@ -51,7 +49,19 @@ app.use(passport.session())
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }))
 
-app.listen(PORT, () => {
-  console.log(`App listening on port ${PORT}!`)
-  swaggerDocs(app, PORT)
-})
+const routes = require('./src/routes/indexRoute')
+
+app.use('/', routes)
+
+const PORT = process.env.PORT || 3000
+const { swaggerDocs } = require('./src/configuration/swaggerConfig')
+
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    console.log(`App listening on port ${PORT}!`)
+    console.log(`http://localhost:${PORT}`)
+    swaggerDocs(app)
+  })
+}
+
+module.exports = app
