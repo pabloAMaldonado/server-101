@@ -29,3 +29,22 @@ exports.new_User = asyncHandler(async (req, res, next) => {
     return res.status(500).json({ error: 'Internal server error' })
   }
 })
+
+exports.login_User = asyncHandler(async (req, res, next) => {
+  passport.authenticate('local', async (err, user) => {
+    if (err) {
+      return next(err)
+    }
+    if (!user) {
+      console.log(user)
+      return res.status(401).json({ error: 'Auth Error!', user })
+    }
+    try {
+      const user_token = generateToken(user)
+      return res.status(200).send({ message: 'Inicio de sesión exitoso', user_token, user })
+    }
+    catch (error) {
+      return next(error)
+    }
+  })(req, res, next)
+})

@@ -25,11 +25,12 @@ async function connectToDatabase (db) {
   }
 }
 
-connectToDatabase(DB)
+if (process.env.NODE_ENV !== 'test') {
+  connectToDatabase(DB)
+  const dataBase = mongoose.connection
 
-const dataBase = mongoose.connection
-
-dataBase.on('error', console.error.bind(console, 'MongoDB connection error'))
+  dataBase.on('error', console.error.bind(console, 'MongoDB connection error'))
+}
 
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'pug')

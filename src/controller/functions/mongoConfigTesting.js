@@ -8,10 +8,9 @@ async function initializeMongoServer () {
     mongoServer = await MongoMemoryServer.create()
     const mongoUri = mongoServer.getUri()
 
-    await mongoose.connect(mongoUri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    })
+    console.log(`MongoMemoryServer URI: ${mongoUri}`) 
+
+    await mongoose.connect(mongoUri, {})
 
     mongoose.connection.on('error', e => {
       if (e.message.code === 'ETIMEDOUT') {
