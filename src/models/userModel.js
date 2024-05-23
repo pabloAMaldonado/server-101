@@ -7,12 +7,6 @@ const passwordValidator = (value) => {
   if (!/[A-Z]/.test(value)) {
     throw new Error('Password must contain at least one uppercase letter')
   }
-
-  // Check for at least one symbol (non-alphanumeric character)
-  if (!/[^A-Za-z0-9]/.test(value)) {
-    throw new Error('Password must contain at least one symbol')
-  }
-
   return true
 }
 
@@ -32,17 +26,6 @@ const UserSchema = new Schema({
     minlength: 4,
     required: true
   },
-  status: {
-    type: String,
-    default: 'free'
-  },
-  verified: {
-    type: String,
-    default: 'Pending'
-  },
-  verifiedId: {
-    type: String
-  }
 })
 
 module.exports = mongoose.model('User', UserSchema)

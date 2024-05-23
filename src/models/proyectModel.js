@@ -16,7 +16,8 @@ const projectSchema = new Schema({
     }]
   }],
   createdAt: { type: Date, default: Date.now },
-  deadline: { type: Date, required: true }
+  deadline: { type: Date, required: true },
+  budget: [{ type: Schema.Types.ObjectId, ref: 'Budget' }]
 })
 
 const Project = mongoose.model('Project', projectSchema)

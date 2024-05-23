@@ -2,6 +2,9 @@ const userController = require('../userController.js')
 const request = require('supertest')
 const mongoose = require('mongoose')
 const app = require('../../../index.js')
+const bcrypt = require('bcryptjs')
+
+const User = require('../../models/userModel.js')
 
 const { beforeAll, afterAll, describe, test, expect } = require('@jest/globals')
 const { initializeMongoServer, closeMongoServer } = require('../functions/mongoConfigTesting.js')
@@ -19,24 +22,65 @@ describe('POST /new-user', () => {
   test('create user with given data responds with a 200 status code and JSON content type', async () => {
     const response = await request(app).post('/new-user').send({
       username: 'username',
-      password: 'password',
-      email: "test@example.com"
+      password: 'Password',
+      email: "testcreateuser@example.com"
     });
     expect(response.statusCode).toBe(200);
     expect(response.headers['content-type']).toMatch(/application\/json/);
   })
 
+  test('create user with invalid password', async () => {
+    const response = await request(app).post('/new-user').send({
+      username: 'username',
+      password: 'password',
+      email: "testcreateuser@example.com"
+    });
+    expect(response.statusCode).toBe(400);
+    expect(response.headers['content-type']).toMatch(/application\/json/);
+  })
+
+
   test('create user with existing email responds with a 400 status code and JSON content type', async () => {
     await request(app).post('/new-user').send({
       username: 'existinguser',
-      password: 'existingpassword',
+      password: 'existingPassword',
       email: 'existing@example.com'
     });
 
     const response = await request(app).post('/new-user').send({
       username: 'newuser',
-      password: 'newpassword',
+      password: 'newPassword',
       email: 'existing@example.com'
+    });
+
+    expect(response.statusCode).toBe(400);
+    expect(response.headers['content-type']).toMatch(/application\/json/);
+  });
+})
+
+describe('POST /login',  () => {
+  beforeAll(async () => {
+    await User.create({
+      username: 'testuser',
+      password: await bcrypt.hash('Password', 10),
+      email: 'test@example.com'
+    })
+  })
+test('recives user credentials reponds with jsw token 200 status code and json content type', async () => {
+    const response = await request(app).post('/login').send({
+      email: 'test@example.com',
+      password: 'Password'
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.headers['content-type']).toMatch(/application\/json/);
+    expect(response.body).toHaveProperty('user_token');
+  });
+
+  test('fails authentication with invalid credentials', async () => {
+    const response = await request(app).post('/login').send({
+      email: 'test@example.com',
+      password: 'wrongpassword'
     });
 
     expect(response.statusCode).toBe(400);

@@ -8,5 +8,6 @@ const UserController = require('../controller/userController')
 router
   .get('/index', IndexController.homepage)
   .post('/new-user', UserController.new_User)
+  .post('/login', UserController.login_User)
 
 module.exports = router
