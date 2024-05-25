@@ -19,7 +19,7 @@ const UserSchema = new Schema({
     type: String,
     minlength: 8,
     required: true,
-    validate: [passwordValidator, 'Password validation failed, It s need at least a mayus character and a symbol']
+    validate: [passwordValidator, 'Password validation failed, passqord needs at least an uppercase letter']
   },
   username: {
     type: String,

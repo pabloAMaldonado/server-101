@@ -10,4 +10,4 @@ const OrganizationSchema = new Schema({
     proyects: [{ type: Schema.Types.ObjectId, ref: 'Proyect'}]
 })
 
-module.exports = mongoose.Model('Organization', OrganizationSchema)
+module.exports = mongoose.model('Organization', OrganizationSchema)

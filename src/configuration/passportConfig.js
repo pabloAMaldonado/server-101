@@ -58,9 +58,9 @@ function authenticateToken (req, res, next) {
 
   jwt.verify(token, JWT_SECRET, (err, user) => {
     if (err) {
-      return res.status(403).json({ message: 'Token no valido' })
+      return res.status(402).json({ message: 'Token no valido' })
     }
-    req.user = user
+    req.user = user.prop
     return req.user
   })
   return next()

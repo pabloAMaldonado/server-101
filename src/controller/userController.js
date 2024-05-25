@@ -3,8 +3,10 @@ const util = require('util')
 const asyncHandler = require('express-async-handler')
 
 const User = require('../models/userModel')
+const Organization = require('../models/organizationModel')
 
 const { passport, generateToken, authenticateToken } = require('../configuration/passportConfig')
+const { user_right_permit } = require('../controller/functions/userManagment')
 
 exports.new_User = asyncHandler(async (req, res, next) => {
   const { email, username, password } = req.body
@@ -33,7 +35,7 @@ exports.new_User = asyncHandler(async (req, res, next) => {
 
     await newUser.save()
 
-    res.status(200).json({ message: 'User created successfully' })
+    res.status(200).json({ message: 'User created successfully', data: newUser })
     next()
   } catch (error) {
     return res.status(500).json({ error: 'Internal server error' })
@@ -74,6 +76,60 @@ exports.user_Info = [
     }
     catch (error){
     return res.status(500).json({ error, message: 'Internal error'})
+    }
+  })
+]
+
+exports.create_org = [
+  authenticateToken,
+  asyncHandler(async (req, res) => {
+    const { user } = req
+    const { formData } = req.body
+    try {
+      const org = await Organization.findOne({ name: formData.name, createdBy: user._id })
+
+      if (org) {
+        return res.status(400).json({ message: 'You have an org with the same name' })
+      }
+
+      const new_org = new Organization({
+        name: formData.name,
+        createdBy: user._id
+      })
+
+      await new_org.save()
+
+      return res.status(200).json({ message: 'Organization created succefully', data: new_org.id})
+    } catch (error) {
+      console.error('Error creating organization:', error)
+      return res.status(500).json({ message: 'Internal error', error })
+    }
+  })
+]
+
+exports.add_member_to_org = [
+  user_right_permit,
+  asyncHandler(async (req, res) => {
+    const { formData } = req.body
+
+    console.log(formData)
+
+    try {
+      const userToAdd = await User.findOne({ email: formData.emailToAdd })
+
+      if (!userToAdd) {
+        return res.status(400).json({ message: 'No existe un usuario con ese correo' })
+      }
+
+      const org = await Organization.findByIdAndUpdate(formData.org._id, { $addToSet: { members: userToAdd._id } }, { new: true }).populate('members')
+
+      if (!org) {
+        return res.status(400).json({ message: 'Organización no encontrada' });
+      }
+
+      return res.status(200).json({message: 'Usuario agregado correctamente', data: org })
+    } catch (error) {
+      return res.status(500).json({ message: 'Internal error', error })
     }
   })
 ]
