@@ -26,6 +26,10 @@ const UserSchema = new Schema({
     minlength: 4,
     required: true
   },
+  verified: {
+    type: String,
+    default: 'Pending'
+  }
 })
 
 module.exports = mongoose.model('User', UserSchema)

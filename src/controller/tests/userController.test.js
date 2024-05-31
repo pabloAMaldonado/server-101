@@ -1,4 +1,3 @@
-const userController = require('../userController.js')
 const request = require('supertest')
 const mongoose = require('mongoose')
 const app = require('../../../index.js')
@@ -127,29 +126,26 @@ describe('POST /new-org', () => {
   })
 })
 
-describe('Put /add-member-to-org', () => {
-  test('adds a member not the user, to an org where the user has rights, returns 200 status code and a data object with the org updated', async () => {
-    const newUser = await User.create({
-      username: 'newuser',
-      password: 'newPassword',
-      email: 'newuser@example.com'
-    });
+describe('POST /new-proyect', () => {
+  test('creates a proyect by authorized user, attached to an org, returns 200 status code and a data object with the proyect data', async () => {
+    const currentDate = new Date()
+    const futureDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, currentDate.getDate())
 
     const response = await request(app)
-      .put('/add-member-to-org')
+      .post('/new-proyect')
       .set('Authorization', `Bearer ${token}`)
       .send({
         formData: {
-          org: { _id: orgId },
-          emailToAdd: newUser.email
+          title: 'Proyecto test',
+          deadline: futureDate,
+          org: { _id: orgId }
         }
       })
 
-      const upd_org = await Organization.findById(orgId).populate('members')
-
       expect(response.statusCode).toBe(200)
-      expect(upd_org).not.toBeNull()
-      expect(upd_org.members.some(member => member.email === newUser.email)).toBe(true)
+      expect(response.headers['content-type']).toMatch(/application\/json/);
+      expect(response.body).toHaveProperty('data');
+  
   })
 })
 

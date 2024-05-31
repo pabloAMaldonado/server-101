@@ -3,18 +3,10 @@ const mongoose = require('mongoose')
 const { Schema } = mongoose
 
 const projectSchema = new Schema({
-  labels: [{ type: String, required: true }],
+  title: { type: String, required: true },
+  by: { type: Schema.Types.ObjectId, ref: 'User' },
   members: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-  tasks: [{
-    name: { type: String, required: true },
-    description: { type: String, required: true },
-    member: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    deadline: { type: Date, required: true },
-    messages: [{
-      text: { type: String },
-      by: { type: Schema.Types.ObjectId, ref: 'User' }
-    }]
-  }],
+  tasks: [{ type: Schema.Types.ObjectId, ref: 'Task' }],
   createdAt: { type: Date, default: Date.now },
   deadline: { type: Date, required: true },
   budget: [{ type: Schema.Types.ObjectId, ref: 'Budget' }]

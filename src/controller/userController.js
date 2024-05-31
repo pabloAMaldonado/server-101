@@ -1,12 +1,12 @@
 const bcrypt = require('bcryptjs')
-const util = require('util')
 const asyncHandler = require('express-async-handler')
 
 const User = require('../models/userModel')
 const Organization = require('../models/organizationModel')
+const Proyect = require('../models/proyectModel')
 
 const { passport, generateToken, authenticateToken } = require('../configuration/passportConfig')
-const { user_right_permit } = require('../controller/functions/userManagment')
+const { verify_permissions } = require('../controller/functions/userManagment')
 
 exports.new_User = asyncHandler(async (req, res, next) => {
   const { email, username, password } = req.body
@@ -94,40 +94,13 @@ exports.create_org = [
 
       const new_org = new Organization({
         name: formData.name,
-        createdBy: user._id
+        createdBy: user._id,
+        members: [user._id]
       })
 
       await new_org.save()
 
       return res.status(200).json({ message: 'Organization created succefully', data: new_org.id})
-    } catch (error) {
-      console.error('Error creating organization:', error)
-      return res.status(500).json({ message: 'Internal error', error })
-    }
-  })
-]
-
-exports.add_member_to_org = [
-  user_right_permit,
-  asyncHandler(async (req, res) => {
-    const { formData } = req.body
-
-    console.log(formData)
-
-    try {
-      const userToAdd = await User.findOne({ email: formData.emailToAdd })
-
-      if (!userToAdd) {
-        return res.status(400).json({ message: 'No existe un usuario con ese correo' })
-      }
-
-      const org = await Organization.findByIdAndUpdate(formData.org._id, { $addToSet: { members: userToAdd._id } }, { new: true }).populate('members')
-
-      if (!org) {
-        return res.status(400).json({ message: 'Organización no encontrada' });
-      }
-
-      return res.status(200).json({message: 'Usuario agregado correctamente', data: org })
     } catch (error) {
       return res.status(500).json({ message: 'Internal error', error })
     }
