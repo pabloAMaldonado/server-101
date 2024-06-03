@@ -95,13 +95,14 @@ exports.create_org = [
       const new_org = new Organization({
         name: formData.name,
         createdBy: user._id,
-        members: [user._id]
       })
 
+      new_org.members.push(user._id)
       await new_org.save()
 
       return res.status(200).json({ message: 'Organization created succefully', data: new_org.id})
     } catch (error) {
+      console.error('create org error', error)
       return res.status(500).json({ message: 'Internal error', error })
     }
   })

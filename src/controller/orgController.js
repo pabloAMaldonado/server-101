@@ -19,15 +19,15 @@ exports.add_member_to_org = [
         if (!userToAdd) {
           return res.status(400).json({ message: 'No existe un usuario con ese correo' })
         }
-  
-        const org = await Organization.findByIdAndUpdate(formData.org._id, { $addToSet: { members: userToAdd._id } }, { new: true }).populate('members')
-  
+        const org = await Organization.findByIdAndUpdate(formData.org._id, { $push: { members: userToAdd._id } }, { new: true }).populate('members')
+
         if (!org) {
           return res.status(400).json({ message: 'Organización no encontrada' });
         }
   
         return res.status(200).json({message: 'Usuario agregado correctamente', data: org })
       } catch (error) {
+        console.error('error add member to org', error)
         return res.status(500).json({ message: 'Internal error', error })
       }
     })

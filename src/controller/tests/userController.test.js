@@ -106,13 +106,13 @@ describe('POST /login',  () => {
 })
 
 describe('POST /new-org', () => {
-  test('create an org, user id added like the creator, returns 200 status code json content type', async () => {
+  test('create an org, user id added like the creator and member, returns 200 status code json content type', async () => {
     const response = await request(app)
     .post('/new-org')
     .set('Authorization', `Bearer ${token}`)
     .send({
       formData: {
-        name:'Test Org'
+        name: 'maldita Org',
       }
     })
 
@@ -123,6 +123,7 @@ describe('POST /new-org', () => {
     expect(response.headers['content-type']).toMatch(/application\/json/)
     expect(org).not.toBeNull()
     expect(org.createdBy.toString()).toBe(userId.toString())
+    expect(org.members.some(member => member.equals(userId))).toBe(true)
   })
 })
 
