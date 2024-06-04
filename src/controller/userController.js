@@ -97,7 +97,7 @@ exports.create_org = [
         createdBy: user._id,
       })
 
-      new_org.members.push(user._id)
+      new_org.members.push({ user: user._id, admin: false })
       await new_org.save()
 
       return res.status(200).json({ message: 'Organization created succefully', data: new_org.id})

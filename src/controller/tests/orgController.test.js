@@ -53,8 +53,7 @@ beforeAll(async () => {
     }
     })
 
-  const test_org = orgResponse.body.data
-  orgId = test_org._id
+    orgId = orgResponse.body.data
 })
 
 afterAll(async () => {
@@ -75,11 +74,10 @@ describe('PUT /add-member-to-org', () => {
         })
   
         const upd_org = await Organization.findById(orgId).populate('members')
-        console.log(upd_org)
   
         expect(response.statusCode).toBe(200)
         expect(upd_org).not.toBeNull()
-        expect(upd_org.members.some(member => member._id === usertwoId)).toBe(true)
+        expect(upd_org.members.some(member => member.user.toString() === usertwoId)).toBe(true)
     })
   })
   
@@ -114,8 +112,7 @@ describe('PUT /add-member-to-org', () => {
 
         const upd_org = await Organization.findById(orgId).populate('members')
 
-        const updatedMember = upd_org.members.find(member => member._id.equals(newUser._id))
-
+        const updatedMember = upd_org.members.find(member => member.user.equals(newUser._id))
 
         expect(response.statusCode).toBe(200)
         expect(upd_org).not.toBeNull()

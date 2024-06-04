@@ -14,8 +14,8 @@ exports.verify_permissions = (requiredPermissions) => {
         return res.status(403).json({ message: 'Organization not found' })
       }
 
-      const isMember = org.members.some(member => member._id.equals(user._id))
-      const isAdmin = org.members.some(member => member._id.equals(user._id) && member.admin)
+      const isMember = org.members.some(member => member.user.equals(user._id))
+      const isAdmin = org.members.some(member => member.user.equals(user._id) && member.admin)
       const isCreator = org.createdBy.equals(user._id)
 
 

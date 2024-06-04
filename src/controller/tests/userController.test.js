@@ -123,7 +123,7 @@ describe('POST /new-org', () => {
     expect(response.headers['content-type']).toMatch(/application\/json/)
     expect(org).not.toBeNull()
     expect(org.createdBy.toString()).toBe(userId.toString())
-    expect(org.members.some(member => member.equals(userId))).toBe(true)
+    expect(org.members.some(member => member.user.equals(userId))).toBe(true)
   })
 })
 

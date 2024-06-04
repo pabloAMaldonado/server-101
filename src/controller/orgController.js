@@ -19,7 +19,9 @@ exports.add_member_to_org = [
         if (!userToAdd) {
           return res.status(400).json({ message: 'No existe un usuario con ese correo' })
         }
-        const org = await Organization.findByIdAndUpdate(formData.org._id, { $push: { members: userToAdd._id } }, { new: true }).populate('members')
+        const org = await Organization.findByIdAndUpdate(formData.org._id,
+          { $push: { members: { user: userToAdd._id, admin: false } } },
+          { new: true })
 
         if (!org) {
           return res.status(400).json({ message: 'Organización no encontrada' });
@@ -70,7 +72,7 @@ exports.add_member_to_org = [
 
         if (!org) return res.status(400).json({ message: 'Error, al seleccionar la organizacion'})
 
-        const memberIndex = org.members.findIndex(member => member._id.toString() === formData.user._id);
+        const memberIndex = org.members.findIndex(member => member.user.toString() === formData.user._id);
 
         if (memberIndex !== -1) {
           org.members[memberIndex].admin = formData.isAdmin;
