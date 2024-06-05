@@ -15,6 +15,7 @@ router
   .post('/login', UserController.login_User)
   .get('/user-info', UserController.user_Info)
   .post('/new-org', UserController.create_org)
+  .post('/new-task', OrganizationController.new_task)
 
   
 

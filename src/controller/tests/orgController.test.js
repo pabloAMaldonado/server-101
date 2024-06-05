@@ -119,3 +119,9 @@ describe('PUT /add-member-to-org', () => {
         expect(updatedMember.admin).toBe(true)
     })
   })
+
+  describe('POST /new-task', () => {
+    test('creates task, adds to proyect s tasks returns 200 status code, a message and a data object with the task', async () => {
+      
+    })
+  })
