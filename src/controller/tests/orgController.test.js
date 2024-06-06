@@ -6,11 +6,9 @@ const bcrypt = require('bcryptjs')
 const User = require('../../models/userModel.js')
 const Organization = require('../../models/organizationModel.js')
 
-
 const { beforeAll, afterAll, describe, test, expect } = require('@jest/globals')
 const { initializeMongoServer, closeMongoServer } = require('../functions/mongoConfigTesting.js')
 const { generateToken } = require('../../configuration/passportConfig.js')
-
 
 let token
 let userId
@@ -117,11 +115,5 @@ describe('PUT /add-member-to-org', () => {
         expect(response.statusCode).toBe(200)
         expect(upd_org).not.toBeNull()
         expect(updatedMember.admin).toBe(true)
-    })
-  })
-
-  describe('POST /new-task', () => {
-    test('creates task, adds to proyect s tasks returns 200 status code, a message and a data object with the task', async () => {
-      
     })
   })

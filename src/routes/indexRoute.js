@@ -5,6 +5,7 @@ const router = express.Router()
 const IndexController = require('../controller/indexController')
 const UserController = require('../controller/userController')
 const OrganizationController = require('../controller/orgController')
+const ProyectController = require('../controller/proyectController')
 
 router
   .get('/index', IndexController.homepage)
@@ -15,7 +16,7 @@ router
   .post('/login', UserController.login_User)
   .get('/user-info', UserController.user_Info)
   .post('/new-org', UserController.create_org)
-  .post('/new-task', OrganizationController.new_task)
+  .post('/new-task', ProyectController.new_task)
 
   
 

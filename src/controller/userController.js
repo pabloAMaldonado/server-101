@@ -100,7 +100,7 @@ exports.create_org = [
       new_org.members.push({ user: user._id, admin: false })
       await new_org.save()
 
-      return res.status(200).json({ message: 'Organization created succefully', data: new_org.id})
+      return res.status(200).json({ message: 'Organization created succefully', data: new_org})
     } catch (error) {
       console.error('create org error', error)
       return res.status(500).json({ message: 'Internal error', error })
